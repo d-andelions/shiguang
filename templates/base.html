@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}首页{% endblock %} · 拾光校园</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%98%80%EF%B8%8F%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="{{ url_for('index') }}">拾<em>光</em>校园</a>
+    <nav class="nav">
+      <a href="{{ url_for('index') }}">逛逛</a>
+      {% if current_user %}
+        <a href="{{ url_for('publish') }}">发布物品</a>
+        <a href="{{ url_for('my_items') }}">我的发布</a>
+        <span class="user-chip" title="{{ current_user.username }}">👋 {{ current_user.nickname }}</span>
+        <a class="muted" href="{{ url_for('logout') }}">退出</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">登录</a>
+        <a class="btn btn-primary btn-sm" href="{{ url_for('register') }}">注册</a>
+      {% endif %}
+    </nav>
+  </div>
+</header>
+
+<main class="container main">
+  {% with msgs = get_flashed_messages(with_categories=true) %}
+    {% for cat, m in msgs %}<div class="flash flash-{{ cat }}">{{ m }}</div>{% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    拾光校园 MVP · 工程管理课程项目 19 组 · 单校区轻量化网页原型<br>
+    边界说明：本平台不提供在线支付、物流配送、站内聊天与信用评分，交易请线下当面完成
+  </div>
+</footer>
+</body>
+</html>

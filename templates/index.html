@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}逛逛{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>校园闲置，流转起来 ☀️</h1>
+  <p>教材 · 数码配件 · 生活用品 —— 江湾校区单校区试运行 MVP</p>
+</section>
+
+<form class="filter-bar" method="get" action="{{ url_for('index') }}">
+  <input class="search-input" type="search" name="q" placeholder="搜索物品名称或描述…"
+         value="{{ filters.q }}">
+
+  <select name="category">
+    <option value="">全部分类</option>
+    {% for c in CATEGORIES %}
+      <option value="{{ c }}" {{ 'selected' if filters.category == c }}>{{ c }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="campus">
+    <option value="">全部校区</option>
+    {% for c in CAMPUSES %}
+      <option value="{{ c }}" {{ 'selected' if filters.campus == c }}>{{ c }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="mode">
+    <option value="">全部方式</option>
+    {% for m in MODES %}
+      <option value="{{ m }}" {{ 'selected' if filters.mode == m }}>{{ m }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="status">
+    <option value="">全部状态</option>
+    {% for s in STATUSES %}
+      <option value="{{ s }}" {{ 'selected' if filters.status == s }}>{{ s }}</option>
+    {% endfor %}
+  </select>
+
+  <select name="sort">
+    {% for key, label in SORT_OPTIONS %}
+      <option value="{{ key }}" {{ 'selected' if filters.sort == key }}>{{ label }}</option>
+    {% endfor %}
+  </select>
+
+  <button class="btn btn-primary" type="submit">筛选</button>
+  <a class="btn btn-ghost" href="{{ url_for('index') }}">重置</a>
+</form>
+
+{% if items %}
+  <p class="result-count">共 {{ items|length }} 件物品（最多展示 100 件）</p>
+  <div class="grid">
+    {% for item in items %}
+      <a class="card" href="{{ url_for('item_detail', item_id=item.id) }}">
+        <div class="card-img">
+          {% if item.image %}
+            <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="{{ item.title }}" loading="lazy">
+          {% else %}
+            <div class="no-img">暂无图片</div>
+          {% endif %}
+          <span class="badge badge-{{ 'on' if item.status == '在售' else 'off' }}">{{ item.status }}</span>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">{{ item.title }}</h3>
+          <p class="price">
+            {% if item.mode == '出售' %}¥{{ '%g'|format(item.price) }}
+            {% elif item.mode == '免费赠送' %}<span class="free">免费</span>
+            {% else %}<span class="free">交换</span>{% endif %}
+          </p>
+          <p class="meta">{{ item.category }} · {{ item.condition }}</p>
+          <p class="meta sub">{{ item.campus }} ｜ {{ item.nickname }} · {{ item.created_at[:10] }}</p>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty">
+    <p>暂时没有符合条件的物品，换个筛选条件试试～</p>
+    {% if not current_user %}<a class="btn btn-primary" href="{{ url_for('publish') }}">登录后发布第一件闲置</a>{% endif %}
+  </div>
+{% endif %}
+{% endblock %}

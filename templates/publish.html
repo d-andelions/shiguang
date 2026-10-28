@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}发布物品{% endblock %}
+
+{% block content %}
+<div class="page-card">
+  <h1 class="page-title">发布闲置物品</h1>
+  <p class="page-sub">发布后其他同学即可在首页搜索到；状态可随时更新为「已转出 / 已下架」</p>
+  <form method="post" enctype="multipart/form-data">
+    {% include "_item_form.html" %}
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">发布</button>
+      <a class="btn btn-ghost" href="{{ url_for('index') }}">取消</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

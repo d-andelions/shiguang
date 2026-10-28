@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}注册{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+  <h1>注册</h1>
+  <form method="post">
+    <label class="field">
+      <span>用户名 *（3-20 位字母、数字或下划线）</span>
+      <input type="text" name="username" required
+             value="{{ form.get('username', '') if form else '' }}">
+    </label>
+    <label class="field">
+      <span>昵称（对外展示，默认同用户名）</span>
+      <input type="text" name="nickname" maxlength="20"
+             value="{{ form.get('nickname', '') if form else '' }}">
+    </label>
+    <label class="field">
+      <span>联系方式 *（微信号/QQ/手机号，仅登录用户可见）</span>
+      <input type="text" name="contact" maxlength="50" required
+             value="{{ form.get('contact', '') if form else '' }}">
+    </label>
+    <label class="field">
+      <span>密码 *（至少 6 位）</span>
+      <input type="password" name="password" minlength="6" required>
+    </label>
+    <button class="btn btn-primary btn-block" type="submit">注册</button>
+  </form>
+  <p class="auth-alt">已有账号？<a href="{{ url_for('login') }}">去登录</a></p>
+</div>
+{% endblock %}

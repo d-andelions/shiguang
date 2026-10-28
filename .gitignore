@@ -1,0 +1,12 @@
+# 运行时生成的数据（演示数据可用 python3 seed.py 重新生成）
+instance/
+uploads/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# 编辑器/系统
+.DS_Store
+*.swp

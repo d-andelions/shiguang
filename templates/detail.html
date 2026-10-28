@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }}{% endblock %}
+
+{% block content %}
+<div class="detail">
+  <div class="detail-img">
+    {% if item.image %}
+      <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="{{ item.title }}">
+    {% else %}
+      <div class="no-img big">暂无图片</div>
+    {% endif %}
+  </div>
+
+  <div class="detail-info">
+    <div class="detail-title-row">
+      <h1>{{ item.title }}</h1>
+      <span class="badge badge-{{ 'on' if item.status == '在售' else 'off' }}">{{ item.status }}</span>
+    </div>
+
+    <p class="price big">
+      {% if item.mode == '出售' %}¥{{ '%g'|format(item.price) }}
+      {% elif item.mode == '免费赠送' %}<span class="free">免费赠送</span>
+      {% else %}<span class="free">交换</span>{% endif %}
+    </p>
+
+    <dl class="specs">
+      <div><dt>分类</dt><dd>{{ item.category }}</dd></div>
+      <div><dt>成色</dt><dd>{{ item.condition }}</dd></div>
+      <div><dt>交易方式</dt><dd>{{ item.mode }}</dd></div>
+      <div><dt>所在校区</dt><dd>{{ item.campus }}</dd></div>
+      <div><dt>发布人</dt><dd>{{ item.nickname }}</dd></div>
+      <div><dt>发布时间</dt><dd>{{ item.created_at[:16] }}</dd></div>
+    </dl>
+
+    <h3 class="section-title">物品描述</h3>
+    <p class="desc">{{ item.description or '（发布者未填写描述）' }}</p>
+
+    <div class="contact-box">
+      <h3 class="section-title">联系发布者</h3>
+      {% if current_user %}
+        <p class="contact">{{ item.contact }}</p>
+        <p class="hint">建议校内当面交易，注意个人信息与财产安全；平台不介入交易纠纷。</p>
+      {% else %}
+        <p class="contact masked">🔒 登录后可查看联系方式</p>
+        <a class="btn btn-primary" href="{{ url_for('login', next=request.path) }}">去登录</a>
+      {% endif %}
+    </div>
+
+    {% if is_owner %}
+      <div class="owner-panel">
+        <strong>这是你发布的物品</strong>
+        <form class="inline-form" method="post" action="{{ url_for('update_status', item_id=item.id) }}">
+          <select name="status">
+            {% for s in STATUSES %}
+              <option value="{{ s }}" {{ 'selected' if s == item.status }}>{{ s }}</option>
+            {% endfor %}
+          </select>
+          <button class="btn btn-primary btn-sm" type="submit">更新状态</button>
+        </form>
+        <a class="btn btn-sm" href="{{ url_for('edit_item', item_id=item.id) }}">编辑</a>
+        <form class="inline-form" method="post" action="{{ url_for('delete_item', item_id=item.id) }}"
+              onsubmit="return confirm('确定删除该物品？删除后不可恢复。')">
+          <button class="btn btn-danger btn-sm" type="submit">删除</button>
+        </form>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<a class="back-link" href="{{ url_for('index') }}">← 返回列表</a>
+{% endblock %}

@@ -1,0 +1,84 @@
+{# 发布/编辑共用的物品表单字段。
+   取值优先级：提交回显 form > 原物品 item > 空值。 #}
+<div class="form-grid">
+  <label class="field span-2">
+    <span>物品标题 *</span>
+    <input type="text" name="title" maxlength="50" required
+           value="{{ form.get('title') if form else (item.title if item else '') }}"
+           placeholder="例如：高等数学（第七版·上册）">
+  </label>
+
+  <label class="field">
+    <span>分类 *</span>
+    <select name="category" required>
+      {% for c in CATEGORIES %}
+        <option value="{{ c }}" {{ 'selected' if (form.get('category') if form else (item.category if item else '')) == c }}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label class="field">
+    <span>成色 *</span>
+    <select name="condition" required>
+      {% for c in CONDITIONS %}
+        <option value="{{ c }}" {{ 'selected' if (form.get('condition') if form else (item.condition if item else '')) == c }}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label class="field">
+    <span>交易方式 *</span>
+    <select name="mode" id="mode" required>
+      {% for m in MODES %}
+        <option value="{{ m }}" {{ 'selected' if (form.get('mode') if form else (item.mode if item else '出售')) == m }}>{{ m }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label class="field" id="price-field">
+    <span>价格（元）* <small id="price-hint">出售时必填</small></span>
+    <input type="number" name="price" min="0" max="999999" step="0.01"
+           value="{{ form.get('price') if form else (item.price if item else '') }}"
+           placeholder="0">
+  </label>
+
+  <label class="field">
+    <span>所在校区 *</span>
+    <select name="campus" required>
+      {% for c in CAMPUSES %}
+        <option value="{{ c }}" {{ 'selected' if (form.get('campus') if form else (item.campus if item else '江湾校区')) == c }}>{{ c }}</option>
+      {% endfor %}
+    </select>
+  </label>
+
+  <label class="field">
+    <span>物品图片（可选，≤5MB）</span>
+    {% if item and item.image %}
+      <div class="current-img">
+        <img src="{{ url_for('uploaded_file', filename=item.image) }}" alt="当前图片">
+        <small>上传新图将替换当前图片</small>
+      </div>
+    {% endif %}
+    <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.webp">
+  </label>
+
+  <label class="field span-2">
+    <span>物品描述</span>
+    <textarea name="description" rows="4" maxlength="1000"
+              placeholder="使用情况、是否可小刀、大致交接地点等">{{ form.get('description') if form else (item.description if item else '') }}</textarea>
+  </label>
+</div>
+
+<script>
+  // 交易方式为免费赠送/交换时，价格输入框禁用
+  const modeSel = document.getElementById('mode');
+  const priceInput = document.querySelector('#price-field input');
+  const priceField = document.getElementById('price-field');
+  function syncPrice() {
+    const isSale = modeSel.value === '出售';
+    priceInput.disabled = !isSale;
+    priceField.classList.toggle('disabled', !isSale);
+  }
+  modeSel.addEventListener('change', syncPrice);
+  syncPrice();
+</script>
