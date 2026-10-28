@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c7d2fe"/>
+      <stop offset="1" stop-color="#4338ca"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="480" fill="url(#g)"/>
+  <circle cx="545" cy="80" r="130" fill="#ffffff" opacity="0.14"/>
+  <circle cx="70" cy="430" r="170" fill="#ffffff" opacity="0.10"/>
+  <text x="44" y="92" font-size="26" fill="#ffffff" opacity="0.85" font-family="sans-serif">教材</text>
+  <text x="44" y="404" font-size="34" font-weight="bold" fill="#ffffff" font-family="sans-serif">数据结构（C++ 语言版）</text>
+  <text x="44" y="444" font-size="18" fill="#ffffff" opacity="0.75" font-family="sans-serif">拾光校园 · 演示图片</text>
+</svg>
